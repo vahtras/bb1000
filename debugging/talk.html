@@ -1,0 +1,964 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Debugging &#8212; BB1000 lecture notes</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Profiling" href="../profiling/talk.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.jpg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">BB1000 lecture notes</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Lecture slides for Programming in Python BB1000
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/talk.html">
+   Introduction to Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../git/talk.html">
+   Introduction to git
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../testing/talk.html">
+   Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../files/talk.html">
+   File handling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../classes/talk.html">
+   Classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../decorators/talk.html">
+   Decorators (Advanced topics)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../iterators/talk.html">
+   Iterators
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../profiling/talk.html">
+   Profiling
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Debugging
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fdebugging/talk.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/debugging/talk.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-outcomes">
+   Learning outcomes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#about-bugs">
+   About bugs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#best-approch-to-avoiding">
+     Best approch to avoiding
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-to-find-bugs">
+     How to find bugs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assertions">
+   Assertions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#logging">
+   Logging
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#debuggers">
+   Debuggers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-pdb-module">
+   The pdb module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#breakpoints">
+   Breakpoints
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pdb-commands">
+     pdb commands
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#links">
+   Links
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary">
+     Summary
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Debugging</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-outcomes">
+   Learning outcomes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#about-bugs">
+   About bugs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#best-approch-to-avoiding">
+     Best approch to avoiding
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-to-find-bugs">
+     How to find bugs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assertions">
+   Assertions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#logging">
+   Logging
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#debuggers">
+   Debuggers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-pdb-module">
+   The pdb module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#breakpoints">
+   Breakpoints
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pdb-commands">
+     pdb commands
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#links">
+   Links
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary">
+     Summary
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <style>
+.centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<link rel="stylesheet" href="/js/highlight/styles/gruvbox-light.css">
+<script src="/js/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<section class="tex2jax_ignore mathjax_ignore" id="debugging">
+<h1>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">#</a></h1>
+<p>BB1000 Programming in Python
+KTH</p>
+<hr class="docutils" />
+<p>layout: false</p>
+<section id="learning-outcomes">
+<h2>Learning outcomes<a class="headerlink" href="#learning-outcomes" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>know how to use assertions</p></li>
+<li><p>know how to use exceptions</p></li>
+<li><p>know how to use logging</p></li>
+<li><p>know how to use a debugger</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="about-bugs">
+<h2>About bugs<a class="headerlink" href="#about-bugs" title="Permalink to this headline">#</a></h2>
+<section id="best-approch-to-avoiding">
+<h3>Best approch to avoiding<a class="headerlink" href="#best-approch-to-avoiding" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>TDD</p></li>
+<li><p>Version control</p></li>
+</ul>
+</section>
+<section id="how-to-find-bugs">
+<h3>How to find bugs<a class="headerlink" href="#how-to-find-bugs" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>insert print statements</p></li>
+<li><p>use other builtin tools</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="assertions">
+<h2>Assertions<a class="headerlink" href="#assertions" title="Permalink to this headline">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="kc">False</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">AssertionError</span>
+
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>evaluates an expression</p></li>
+<li><p>if it is true-ish continue</p></li>
+<li><p>if not stop or handle error</p></li>
+</ul>
+<p>In tests:</p>
+<ul class="simple">
+<li><p>a fundamental component in testing frameworks</p></li>
+</ul>
+<p>In code:</p>
+<ul class="simple">
+<li><p>a sanity check</p></li>
+<li><p><em>I assert that this condition is true, otherwise there is a bug somewhere</em></p></li>
+<li><p>fail fast and recover</p></li>
+<li><p>catch programming errors</p></li>
+</ul>
+<hr class="docutils" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#get_number.py</span>
+<span class="k">def</span> <span class="nf">get_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;Argument should be an integer&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number is </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="n">get_number</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Disable with -O</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">python</span> <span class="o">-</span><span class="n">O</span> <span class="n">program</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>##Exceptions</p>
+<ul class="simple">
+<li><p>exceptions are errors: the program crashes</p></li>
+<li><p>unless you handle them in some way and continue running</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span><span class="o">/</span><span class="mi">0</span>                                                                          
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">ZeroDivisionError</span>: <span class="n">integer division or modulo by zero</span>
+
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Errors can be handled with <code class="docutils literal notranslate"><span class="pre">try...except...</span>&#160; </code></p></li>
+<li><p>to detect and handle errors you can aniticipate</p></li>
+<li><p>potential problems are put in a <code class="docutils literal notranslate"><span class="pre">try</span></code> clause</p></li>
+<li><p>if an error happends the code skips to the following except clause</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="mi">1</span><span class="o">/</span><span class="mi">0</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning:Zero division, continuing&quot;</span><span class="p">)</span>
+<span class="go">Warning:Zero division, continuing</span>
+<span class="go">&gt;&gt;&gt;</span>
+
+
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>Parents’ approach (ask permission first)</p>
+<!--
+```
+>>> n = 0
+
+```
+
+-->
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning...&#39;</span><span class="p">)</span>
+<span class="go">Warning...</span>
+
+</pre></div>
+</div>
+<p>Childs’ approach (ask forgiveness after)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning...&#39;</span><span class="p">)</span>
+<span class="go">Warning...</span>
+
+</pre></div>
+</div>
+<p><em>Easier to ask for forgiveness than for permission</em></p>
+<hr class="docutils" />
+<p>###Example</p>
+<p>Script which emulates the Linux <code class="docutils literal notranslate"><span class="pre">cat</span></code> command:</p>
+<ul class="simple">
+<li><p>take filename argument</p></li>
+<li><p>opens and reads file</p></li>
+<li><p>prints contents to stdout</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#cat.py</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: </span><span class="si">%s</span><span class="s2"> filename&quot;</span> <span class="o">%</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: no such file, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">filename</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cat.py
+Usage: %s filename
+python cat.py nofile
+cat.py: no such file, nofile
+python cat.py somefile
+&lt;contents of somefile&gt;
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>In programs</p>
+<ul class="simple">
+<li><p>an error condition is indicated by raising an exception</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;something is wrong here&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>exceptions can be created with the Exception() call</p>
+<ul>
+<li><p>creates an instance of the Exception class</p></li>
+<li></li>
+</ul>
+</li>
+<li><p>many standard exceptions are subclasses to the Exception class</p>
+<ul>
+<li><p>ZeroDivisionError (division by zero)</p></li>
+<li><p>FileNotFoundError (file not found)</p></li>
+<li><p>https://docs.python.org/3/library/exceptions.html</p></li>
+</ul>
+</li>
+</ul>
+<hr class="docutils" />
+<p>Define your own exceptions</p>
+<!--
+```
+>>> from zoo import ZooCatalog, Bird, Reptile
+
+```
+-->
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NoBirdError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+   <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ZooCatalog</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">add_bird</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_bird</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">new_bird</span><span class="p">)</span> <span class="o">!=</span> <span class="n">Bird</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoBirdError</span><span class="p">(</span><span class="s1">&#39;this is not a bird&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>executing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zoo</span> <span class="o">=</span> <span class="n">ZooCatalog</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zoo</span><span class="o">.</span><span class="n">add_bird</span><span class="p">(</span><span class="n">Reptile</span><span class="p">())</span>                                                      
+<span class="gt">Traceback (most recent call last):</span>
+	<span class="c">...</span>
+    <span class="k">raise</span> <span class="n">NoBirdError</span><span class="p">(</span><span class="s1">&#39;this not a bird&#39;</span><span class="p">)</span>
+<span class="gr">__main__.NoBirdError</span>: <span class="n">this not a bird</span>
+
+</pre></div>
+</div>
+<p>testing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_nobird</span><span class="p">():</span>
+    <span class="n">zoo</span> <span class="o">=</span> <span class="n">ZooCatalog</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoBirdError</span><span class="p">):</span>
+        <span class="n">zoo</span><span class="o">.</span><span class="n">add_bird</span><span class="p">(</span><span class="n">Reptile</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>a better type of print</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%(message)&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>                                                 
+<span class="go">Hello world</span>
+
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>easy to switch between hiding/showing log messages</p></li>
+<li><p>intended for programmer not user</p></li>
+<li><p>catagorize your log messages by importance</p></li>
+<li><p>tracking more info</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">log_format</span> <span class="o">=</span> <span class="s1">&#39; </span><span class="si">%(asctime)s</span><span class="s1"> </span><span class="si">%(levelname)s</span><span class="s1">: &lt;</span><span class="si">%(message)s</span><span class="s1">&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">log_format</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>
+<span class="go"> 2017-05-09 13:42:55,142 DEBUG: &lt;Hello world&gt;</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-align:left head"><p>Levels</p></th>
+<th class="text-align:left head"><p>function</p></th>
+<th class="text-align:left head"><p>When</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-align:left"><p>DEBUG</p></td>
+<td class="text-align:left"><p><code class="docutils literal notranslate"><span class="pre">logging.debug()</span></code></p></td>
+<td class="text-align:left"><p>Diagnosing</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:left"><p>INFO</p></td>
+<td class="text-align:left"><p><code class="docutils literal notranslate"><span class="pre">logging.info()</span></code></p></td>
+<td class="text-align:left"><p>Confirming</p></td>
+</tr>
+<tr class="row-even"><td class="text-align:left"><p>WARNING</p></td>
+<td class="text-align:left"><p><code class="docutils literal notranslate"><span class="pre">logging.warning()</span></code></p></td>
+<td class="text-align:left"><p>Potential problem</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:left"><p>ERROR</p></td>
+<td class="text-align:left"><p><code class="docutils literal notranslate"><span class="pre">logging.error()</span></code></p></td>
+<td class="text-align:left"><p>Program failure</p></td>
+</tr>
+<tr class="row-even"><td class="text-align:left"><p>CRITICAL</p></td>
+<td class="text-align:left"><p><code class="docutils literal notranslate"><span class="pre">logging.critical()</span></code></p></td>
+<td class="text-align:left"><p>Fatal error</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Diagnosic output&#39;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting ok&#39;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Som error has occured&#39;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;Unable to recover&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">09</span> <span class="mi">14</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span><span class="mi">822</span> <span class="n">DEBUG</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">Diagnosic</span> <span class="n">output</span><span class="o">&gt;</span>
+ <span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">09</span> <span class="mi">14</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span><span class="mi">822</span> <span class="n">INFO</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">Starting</span> <span class="n">ok</span><span class="o">&gt;</span>
+ <span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">09</span> <span class="mi">14</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span><span class="mi">822</span> <span class="n">ERROR</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">Some</span> <span class="n">error</span> <span class="n">has</span> <span class="n">occured</span><span class="o">&gt;</span>
+ <span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">09</span> <span class="mi">14</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span><span class="mi">822</span> <span class="n">CRITICAL</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">Unable</span> <span class="n">to</span> <span class="n">recover</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>disable all logging</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logging</span><span class="o">.</span><span class="n">disable</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>logging to a file (keep normal output clean)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%(message)&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;my.log&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="debuggers">
+<h2>Debuggers<a class="headerlink" href="#debuggers" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>execute code line by line</p></li>
+<li><p>inspect variables</p></li>
+<li><p>set break points</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="the-pdb-module">
+<h2>The pdb module<a class="headerlink" href="#the-pdb-module" title="Permalink to this headline">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pdb</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">dir</span><span class="p">(</span><span class="n">pdb</span><span class="p">)</span>
+<span class="go">[&#39;Pdb&#39;, &#39;Restart&#39;, &#39;TESTCMD&#39;, &#39;__all__&#39;, &#39;__builtins__&#39;, &#39;__cached__&#39;,</span>
+<span class="go">&#39;__doc__&#39;, &#39;__file__&#39;, &#39;__loader__&#39;, &#39;__name__&#39;, &#39;__package__&#39;, &#39;__spec__&#39;,</span>
+<span class="go">&#39;_rstr&#39;, &#39;_usage&#39;, &#39;bdb&#39;, &#39;cmd&#39;, &#39;code&#39;, &#39;dis&#39;, &#39;find_function&#39;,</span>
+<span class="go">&#39;getsourcelines&#39;, &#39;glob&#39;, &#39;help&#39;, &#39;inspect&#39;, &#39;lasti2lineno&#39;, &#39;line_prefix&#39;,</span>
+<span class="go">&#39;linecache&#39;, &#39;main&#39;, &#39;os&#39;, &#39;pm&#39;, &#39;post_mortem&#39;, &#39;pprint&#39;, &#39;re&#39;, &#39;run&#39;,</span>
+<span class="go">&#39;runcall&#39;, &#39;runctx&#39;, &#39;runeval&#39;, &#39;set_trace&#39;, &#39;signal&#39;, &#39;sys&#39;, &#39;test&#39;,</span>
+<span class="go">&#39;traceback&#39;]</span>
+
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="breakpoints">
+<h2>Breakpoints<a class="headerlink" href="#breakpoints" title="Permalink to this headline">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="nb">breakpoint</span><span class="p">()</span>  
+<span class="gp">... </span>   <span class="c1"># import pdb; pdb.set_trace() for python&lt;3.7</span>
+<span class="gp">... </span>   <span class="n">c</span>  <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="n">c</span>
+
+</pre></div>
+</div>
+<hr class="docutils" />
+<section id="pdb-commands">
+<h3>pdb commands<a class="headerlink" href="#pdb-commands" title="Permalink to this headline">#</a></h3>
+<p>Some of the most used commands are common <code class="docutils literal notranslate"><span class="pre">gdb</span></code></p>
+<ul class="simple">
+<li><p>step (s) : execute the next line (for function calls step into that function)</p></li>
+<li><p>next (n) : execute the next line (for function calls complete the function all and stop at the next line of current function)</p></li>
+<li><p>break (b): set break point</p></li>
+<li><p>continue (c): continue execution</p></li>
+</ul>
+<hr class="docutils" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Pdb</span><span class="p">)</span> <span class="n">help</span>
+<span class="n">Documented</span> <span class="n">commands</span> <span class="p">(</span><span class="nb">type</span> <span class="n">help</span> <span class="o">&lt;</span><span class="n">topic</span><span class="o">&gt;</span><span class="p">):</span>
+<span class="o">========================================</span>
+<span class="n">EOF</span>    <span class="n">bt</span>         <span class="n">cont</span>      <span class="n">enable</span>  <span class="n">jump</span>  <span class="n">pp</span>       <span class="n">run</span>      <span class="n">unt</span>   
+<span class="n">a</span>      <span class="n">c</span>          <span class="k">continue</span>  <span class="n">exit</span>    <span class="n">l</span>     <span class="n">q</span>        <span class="n">s</span>        <span class="n">until</span> 
+<span class="n">alias</span>  <span class="n">cl</span>         <span class="n">d</span>         <span class="n">h</span>       <span class="nb">list</span>  <span class="n">quit</span>     <span class="n">step</span>     <span class="n">up</span>    
+<span class="n">args</span>   <span class="n">clear</span>      <span class="n">debug</span>     <span class="n">help</span>    <span class="n">n</span>     <span class="n">r</span>        <span class="n">tbreak</span>   <span class="n">w</span>     
+<span class="n">b</span>      <span class="n">commands</span>   <span class="n">disable</span>   <span class="n">ignore</span>  <span class="nb">next</span>  <span class="n">restart</span>  <span class="n">u</span>        <span class="n">whatis</span>
+<span class="k">break</span>  <span class="n">condition</span>  <span class="n">down</span>      <span class="n">j</span>       <span class="n">p</span>     <span class="k">return</span>   <span class="n">unalias</span>  <span class="n">where</span> 
+<span class="o">...</span>
+
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>http://docs.python.org/3/library/pdb.html</p></li>
+<li><p>https://realpython.com/python-debugging-pdb/</p></li>
+<li><p>https://youtu.be/5AYIe-3cD-s</p></li>
+</ul>
+<hr class="docutils" />
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pdb</span></code>  modules  for debugging</p></li>
+<li><p>Useful shortcut: insert the line</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">breakpoint</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>anywhere in your code to get a breakpoint and the run the program as normal</p>
+<ul class="simple">
+<li><p>pytest –pdb executes tests and stops in the debugger if there is an error</p></li>
+<li><p>insert “assert False” in a code under pytest works as a breakpoint</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./debugging"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../profiling/talk.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Profiling</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Olav Vahtras<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
